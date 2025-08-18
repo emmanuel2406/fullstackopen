@@ -6,9 +6,7 @@ const app = express()
 app.use(cors())
 
 
-morgan.token('body', (req, res) => {
-    return JSON.stringify(req.body)
-})
+const tinyFormat = morgan.compile(morgan['tiny'])
 
 // Define a custom format function
 morgan.format('conditional', function (tokens, req, res) {
@@ -23,7 +21,7 @@ morgan.format('conditional', function (tokens, req, res) {
       ].join(' ');
     } else {
       // fallback to tiny format
-      return morgan['tiny'](tokens, req, res);
+      return tinyFormat(tokens, req, res)
     }
   });
 
@@ -131,7 +129,7 @@ const unknownEndpoint = (request, response) => {
   }
   app.use(unknownEndpoint)
 
-PORT = 3001
+PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
