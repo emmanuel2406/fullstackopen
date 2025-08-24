@@ -67,8 +67,10 @@ const App = () => {
         }, 5000)
       })
       .catch(error => {
-        alert(`${newName} is already in the phonebook`)
-        console.log(error)
+        setErrorNotification(`Person validation failed: ${error.response.data.error}`)
+        setTimeout(() => {
+          setErrorNotification(null)
+        }, 5000)
       })
     setNewName('')
     setNewNumber('')
