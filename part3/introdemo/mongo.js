@@ -7,7 +7,7 @@ if (process.argv.length < 3) {
 
 const password = process.argv[2]
 
-const url = `redacted`
+const url = `redacted${password}`
 
 mongoose.set('strictQuery',false)
 
@@ -30,9 +30,9 @@ const Note = mongoose.model('Note', noteSchema)
 //   mongoose.connection.close()
 // })
 
-Note.find({important: true}).then(result => {
-    result.forEach(note => {
-        console.log(note)
-    })
-    mongoose.connection.close()
+Note.find({ important: true }).then(notes => {
+  notes.forEach(note => {
+    console.log(note)
+  })
+  mongoose.connection.close()
 })
