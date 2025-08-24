@@ -8,3 +8,12 @@ content-type: application/json
     "content": "VS Code Rest client is a pretty handy tool",
     "important": true
 }
+
+###
+POST http://localhost:3001/api/notes
+content-type: application/json
+
+{
+    "content": "lol",
+    "important": true
+}
