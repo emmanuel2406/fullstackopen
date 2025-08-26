@@ -1,26 +1,14 @@
-const { test, describe } = require('node:test')
+const { test, describe, beforeEach, after } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
+const supertest = require('supertest')
+const app = require('../app')
+const api = supertest(app)
+const Blog = require('../models/blog')
+const helper = require('./test_helper')
+const mongoose = require('mongoose')
 
-test('dummy returns one', () => {
-  const blogs = []
-
-  const result = listHelper.dummy(blogs)
-  assert.strictEqual(result, 1)
-})
-
-const listWithOneBlog = [
-  {
-    _id: '5a422aa71b54a676234d17f8',
-    title: 'Go To Statement Considered Harmful',
-    author: 'Edsger W. Dijkstra',
-    url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-    likes: 5,
-    __v: 0
-  }
-]
-
-const blogs = [
+const initialBlogs = [
   {
     _id: "5a422a851b54a676234d17f7",
     title: "React patterns",
@@ -71,6 +59,30 @@ const blogs = [
   }
 ]
 
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  await Blog.insertMany(initialBlogs)
+})
+
+
+test('dummy returns one', () => {
+  const blogs = []
+
+  const result = listHelper.dummy(blogs)
+  assert.strictEqual(result, 1)
+})
+
+const listWithOneBlog = [
+  {
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+    likes: 5,
+    __v: 0
+  }
+]
+
 describe('total likes', () => {
   test('of empty list is zero', () => {
     const result = listHelper.totalLikes([])
@@ -83,15 +95,15 @@ describe('total likes', () => {
   })
 
   test('of a bigger list is calculated right', () => {
-    const result = listHelper.totalLikes(blogs)
+    const result = listHelper.totalLikes(initialBlogs)
     assert.strictEqual(result, 36)
   })
 })
 
 describe('favorite blog', () => {
   test('of a bigger list is calculated right', () => {
-    const result = listHelper.favoriteBlog(blogs)
-    assert.deepStrictEqual(result, blogs[2])
+    const result = listHelper.favoriteBlog(initialBlogs)
+    assert.deepStrictEqual(result, initialBlogs[2])
   })
 
   test('of a list with one blog is the blog itself', () => {
@@ -107,7 +119,7 @@ describe('favorite blog', () => {
 
 describe('most blogs', () => {
   test('of a bigger list is calculated right', () => {
-    const result = listHelper.mostBlogs(blogs)
+    const result = listHelper.mostBlogs(initialBlogs)
     assert.deepStrictEqual(result, ['Robert C. Martin', 3])
   })
 
@@ -124,7 +136,7 @@ describe('most blogs', () => {
 
 describe('most likes', () => {
   test('of a bigger list is calculated right', () => {
-    const result = listHelper.mostLikes(blogs)
+    const result = listHelper.mostLikes(initialBlogs)
     assert.deepStrictEqual(result, ['Edsger W. Dijkstra', 17])
   })
 
@@ -137,4 +149,96 @@ describe('most likes', () => {
     const result = listHelper.mostLikes([])
     assert.deepStrictEqual(result, null)
   })
+})
+
+describe('blog api', () => {
+  test('can fetch all blogs', async() => {
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body.length, initialBlogs.length)
+  })
+
+  test('can add a blog', async() => {
+    const newBlog = {
+      title: 'Test Blog',
+      author: 'Test Author',
+      url: 'https://test.com',
+      likes: 5
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, initialBlogs.length + 1)
+
+    const contents = blogsAtEnd.map(r => r.title)
+    assert(contents.includes('Test Blog'))
+  })
+
+  test('if likes is missing, it defaults to 0', async() => {
+    const newBlog = {
+      title: 'Test Blog',
+      author: 'Test Author',
+      url: 'https://test.com'
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd[blogsAtEnd.length - 1].likes, 0)
+  })
+
+  describe.only('posting a blog with missing fields', () => {
+    test('title is missing', async() => {
+      const newBlog = {
+        author: 'Test Author',
+        url: 'https://test.com',
+        likes: 5
+      }
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      const blogsAtEnd = await helper.blogsInDb()
+      assert.strictEqual(blogsAtEnd.length, initialBlogs.length)
+    })
+
+    test('url is missing', async() => {
+      const newBlog = {
+        title: 'Test Blog',
+        author: 'Test Author',
+        likes: 5
+      }
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      const blogsAtEnd = await helper.blogsInDb()
+      assert.strictEqual(blogsAtEnd.length, initialBlogs.length)
+    })
+  })
+})
+
+test('blog has id field', async() => {
+  const response = await helper.blogsInDb()
+  const blog = response[0]
+  assert.strictEqual(blog.id, initialBlogs[0]._id.toString())
+})
+
+
+after(async () => {
+  await mongoose.connection.close()
 })
