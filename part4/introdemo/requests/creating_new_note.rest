@@ -6,7 +6,8 @@ content-type: application/json
 
 {
     "content": "VS Code Rest client is a pretty handy tool",
-    "important": true
+    "important": true,
+    "userId": "68aeb842e26095a86930b6e5"
 }
 
 ###

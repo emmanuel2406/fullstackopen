@@ -4,14 +4,12 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./test_helper')
-const Note = require('../models/note')
 
 const api = supertest(app)
 
 describe('when there is initially some notes saved', () => {
   beforeEach(async () => {
-    await Note.deleteMany({})
-    await Note.insertMany(helper.initialNotes)
+    await helper.seedUsersAndNotes()
   })
 
   test('notes are returned as json', async () => {
@@ -39,12 +37,15 @@ describe('when there is initially some notes saved', () => {
       const notesAtStart = await helper.notesInDb()
       const noteToView = notesAtStart[0]
 
-      const resultNote = await api
+      const result = await api
         .get(`/api/notes/${noteToView.id}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
-      assert.deepStrictEqual(resultNote.body, noteToView)
+      const returned = result.body
+      assert.strictEqual(returned.id, noteToView.id)
+      assert.strictEqual(returned.content, noteToView.content)
+      assert.strictEqual(returned.important, noteToView.important)
     })
 
     test('fails with statuscode 404 if note does not exist', async () => {
@@ -67,9 +68,11 @@ describe('when there is initially some notes saved', () => {
         important: true,
       }
 
+      const users = await helper.usersInDb()
+
       await api
         .post('/api/notes')
-        .send(newNote)
+        .send({ ...newNote, userId: users[0].id })
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
