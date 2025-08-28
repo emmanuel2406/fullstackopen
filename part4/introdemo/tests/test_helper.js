@@ -1,5 +1,6 @@
 const Note = require('../models/note')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 const initialNotes = [
   {
@@ -48,8 +49,21 @@ const clearDb = async () => {
 const seedUsersAndNotes = async () => {
   await clearDb()
 
+  // also store authentication tokens
+
   const userDoc = new User(initialUsers[0])
   const savedUser = await userDoc.save()
+
+  const userForToken = {
+    username: savedUser.username,
+    id: savedUser._id,
+  }
+
+  const token = jwt.sign(
+    userForToken,
+    process.env.SECRET,
+    { expiresIn: 60*60 }
+  )
 
   const noteDocs = await Note.insertMany(
     initialNotes.map(n => ({ ...n, user: savedUser._id }))
@@ -58,7 +72,7 @@ const seedUsersAndNotes = async () => {
   savedUser.notes = noteDocs.map(n => n._id)
   await savedUser.save()
 
-  return { user: savedUser, notes: noteDocs }
+  return { user: savedUser, notes: noteDocs, token }
 }
 
 module.exports = {

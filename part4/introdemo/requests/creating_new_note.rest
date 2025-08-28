@@ -1,13 +1,14 @@
-GET http://localhost:3001/api/notes
+GET http://localhost:3001/api/users
 
 ###
 POST http://localhost:3001/api/notes
 content-type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY4YjAwNDlhMTRiZTE2OWIyODhlMDVlZiIsImlhdCI6MTc1NjM2NjQzOX0.GIeeZJO-gm0bOTI4ryx5tuYYjlZuGE8d0HcLCu7JCT0
 
 {
     "content": "VS Code Rest client is a pretty handy tool",
     "important": true,
-    "userId": "68aeb842e26095a86930b6e5"
+    "userId": "68b0049a14be169b288e05ef"
 }
 
 ###

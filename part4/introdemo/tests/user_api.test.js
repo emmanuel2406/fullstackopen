@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const app = require('../app')
 const api = supertest(app)
 
-describe('when there is initially one user in db', () => {
+describe.only('when there is initially one user in db', () => {
   beforeEach(async () => {
     await helper.clearDb()
 
