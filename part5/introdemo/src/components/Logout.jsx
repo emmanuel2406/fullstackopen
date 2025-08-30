@@ -7,14 +7,14 @@ const Logout = ({ setUser }) => {
     setUser(null)
     noteService.setToken(null)
   }
-    return (
-        <button
-          style={{ marginLeft: '5px', backgroundColor: 'red', color: 'white' }}
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
-    )
+  return (
+    <button
+      style={{ marginLeft: '5px', backgroundColor: 'red', color: 'white' }}
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
+  )
 }
 
 export default Logout

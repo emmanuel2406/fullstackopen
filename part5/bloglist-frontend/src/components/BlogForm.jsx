@@ -7,14 +7,14 @@ const BlogForm = ({ createBlog }) => {
   const handleCreate = async (event) => {
     event.preventDefault()
 
-    createBlog({title: newTitle, author: newAuthor, url: newUrl})
+    createBlog({ title: newTitle, author: newAuthor, url: newUrl })
 
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')
   }
   return (
-      <form onSubmit={handleCreate}>
+    <form onSubmit={handleCreate}>
       <div>
         <label>
           title:
@@ -25,8 +25,8 @@ const BlogForm = ({ createBlog }) => {
             onChange={({ target }) => setNewTitle(target.value)}
           />
         </label>
-        </div>
-        <div>
+      </div>
+      <div>
         <label>author:
           <input
             type="text"
@@ -35,8 +35,8 @@ const BlogForm = ({ createBlog }) => {
             onChange={({ target }) => setNewAuthor(target.value)}
           />
         </label>
-        </div>
-        <div>
+      </div>
+      <div>
         <label>url:
           <input
             type="text"
@@ -45,8 +45,8 @@ const BlogForm = ({ createBlog }) => {
             onChange={({ target }) => setNewUrl(target.value)}
           />
         </label>
-        </div>
-        <button type="submit">create</button>
+      </div>
+      <button type="submit">create</button>
     </form>
   )
 }

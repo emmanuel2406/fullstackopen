@@ -20,34 +20,34 @@ const LoginForm = ({ loginUser }) => {
       }, 5000)
     }
   }
-    return (
-      <form onSubmit={handleLogin}>
-        <Notification message={errorMessage} type='error' />
-          <div>
-              <label>
-                username
-                <input
-                  type="text"
-                  value={username}
-                  name="Username"
-                  onChange={({ target }) => setUsername(target.value)}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                password
-                <input
-                  type="password"
-                  value={password}
-                  name="Password"
-                  onChange={({ target }) => setPassword(target.value)}
-                />
-              </label>
-            </div>
-            <button type="submit">login</button>
-      </form>
-    )
+  return (
+    <form onSubmit={handleLogin}>
+      <Notification message={errorMessage} type='error' />
+      <div>
+        <label>
+          username
+          <input
+            type="text"
+            value={username}
+            name="Username"
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          password
+          <input
+            type="password"
+            value={password}
+            name="Password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </label>
+      </div>
+      <button type="submit">login</button>
+    </form>
+  )
 }
 
 export default LoginForm
