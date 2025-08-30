@@ -4,7 +4,7 @@ GET http://localhost:3003/api/blogs
 
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY4YjA3OWY2YzkzOTIyMTllYjkwMTZhOCIsImlhdCI6MTc1NjM5NjQzOCwiZXhwIjoxNzU2NDAwMDM4fQ.hAORNlOT6tO0juOp0Urh-xd26BmoXeAsCcbGgNr_Of0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY4YjBiZGEzNDg3YjAwOWE5ZDVlNDJlMiIsImlhdCI6MTc1NjQ1NzAxNiwiZXhwIjoxNzU2NDYwNjE2fQ.6vy6giEViP0oxZzzwz6g1tiBJ6OKNNx1f-m37iYSZX8
 
 {
   "title": "Test Blog",
