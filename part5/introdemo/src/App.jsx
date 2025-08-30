@@ -1,15 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Note from './components/Note'
 import LoginForm from './components/LoginForm'
+import loginService from './services/login'
 import noteService from './services/notes'
 import Notification from './components/Notification'
 import Footer from './components/Footer'
 import Logout from './components/Logout'
+import Togglable from './components/Togglable'
+import NoteForm from './components/NoteForm'
 import './index.css'
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('a new note...')
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
@@ -31,21 +33,13 @@ const App = () => {
     }
   }, [])
 
-  const addNote = async (event) => {
-    event.preventDefault()
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5,
-    }
-
-    const returnedNote = await noteService.create(noteObject)
-    setNotes(notes.concat(returnedNote))
-
-    setNewNote('')
-  }
-
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value)
+  const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility()
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+      })
   }
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
@@ -71,23 +65,35 @@ const App = () => {
       })
   }
 
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-        <input value={newNote} onChange={handleNoteChange} />
-        <button type="submit">add</button>
-      </form>
+  const handleLogin = async (userObject) => {
+    const user = await loginService.login(userObject)
+    setUser(user)
+    window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
+    noteService.setToken(user.token)
+  }
+
+  const loginForm = () => (
+    <Togglable buttonLabel='log in'>
+      <LoginForm
+        loginUser={handleLogin}
+      />
+    </Togglable>
   )
 
+  const noteFormRef = useRef()
+
+  const noteForm = () => (
+    <Togglable buttonLabel='new note' ref={noteFormRef}>
+      <NoteForm createNote={addNote}/>
+    </Togglable>
+  )
 
   return (
     <div>
       <h1>Notes</h1>
-      <Notification message={errorMessage} />
+      <Notification message={errorMessage} type='error' />
 
-      {!user && <LoginForm
-        setUser={setUser}
-        setErrorMessage={setErrorMessage}
-      />}
+      {!user && loginForm()}
 
       {user && (
         <div>
