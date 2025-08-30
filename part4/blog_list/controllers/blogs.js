@@ -59,11 +59,22 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
   response.status(204).end()
 })
 
-blogsRouter.put('/:id', async (request, response) => {
-  const blog = await Blog.findById(request.params.id)
+blogsRouter.put('/:id', userExtractor, async (request, response) => {
+  const blog = await Blog
+    .findById(request.params.id)
+    .populate('user', { username: 1, name: 1 })
+
   if (!blog) {
     return response.status(404).end()
   }
+
+  if (!request.user) {
+    return response.status(400).json({ error: 'User id missing or not valid' })
+  }
+  if (blog.user.id.toString() !== request.user.id.toString()) {
+    return response.status(401).json({ error: 'Unauthorized' })
+  }
+
   blog.title = request.body.title || blog.title
   blog.author = request.body.author || blog.author
   blog.url = request.body.url || blog.url
