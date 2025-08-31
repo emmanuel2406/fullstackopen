@@ -45,4 +45,12 @@ export default [
       'react/prop-types': 'off'
     },
   },
+  {
+    files: ['**/*.{test.js,test.jsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.vitest
+      }
+    }
+  }
 ]
