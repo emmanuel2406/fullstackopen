@@ -10,3 +10,13 @@ content-type: application/json
     "name": "newUser",
     "password": "newPassword"
 }
+
+###
+POST http://localhost:3001/api/users
+content-type: application/json
+
+{
+    "username": "mluukai",
+    "name": "Matti Luukkainen",
+    "password": "salainen"
+}

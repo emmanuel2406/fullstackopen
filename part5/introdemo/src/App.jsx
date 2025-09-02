@@ -66,10 +66,17 @@ const App = () => {
   }
 
   const handleLogin = async (userObject) => {
-    const user = await loginService.login(userObject)
-    setUser(user)
-    window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
-    noteService.setToken(user.token)
+    try {
+      const user = await loginService.login(userObject)
+      setUser(user)
+      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
+      noteService.setToken(user.token)
+    } catch {
+      setErrorMessage('wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const loginForm = () => (
