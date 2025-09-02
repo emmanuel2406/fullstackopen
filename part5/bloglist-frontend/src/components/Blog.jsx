@@ -29,7 +29,7 @@ const Blog = ({ blog, handleLike, removeBlog, canRemove }) => {
     return (
       <div style={blogStyle}>
         {blog.title} {blog.author}{' '}
-        <button onClick={() => toggleExpanded()}>view</button>
+        <button name="view" onClick={() => toggleExpanded()}>view</button>
       </div>
     )
   }
@@ -43,12 +43,12 @@ const Blog = ({ blog, handleLike, removeBlog, canRemove }) => {
       <div>{blog.url}</div>
       <div>
         likes {blog.likes}
-        <button onClick={() => handleLike(blog.id)}>like</button>
+        <button name="like" onClick={() => handleLike(blog.id)}>like</button>
       </div>
       <div>{blog.user.name}</div>
       {canRemove && (
         <div>
-          <button style={deleteStyle} onClick={() => handleRemove(blog.id)}>remove</button>
+          <button style={deleteStyle} name="remove" onClick={() => handleRemove(blog.id)}>remove</button>
         </div>
       )}
     </div>

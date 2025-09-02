@@ -57,7 +57,7 @@ const App = () => {
   const loginForm = () => (
     <>
       <h2>Log in to application</h2>
-      <Togglable buttonLabel='login'>
+      <Togglable buttonLabel='log in'>
         <LoginForm loginUser={handleLogin} />
       </Togglable>
     </>
