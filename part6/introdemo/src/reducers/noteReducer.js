@@ -1,12 +1,10 @@
 import { createSlice, current } from '@reduxjs/toolkit'
+import notesService from '../services/notes'
 
 const noteSlice = createSlice({
   name: 'notes',
   initialState: [],
   reducers: {
-    createNote(state, action) {
-      state.push(action.payload)
-    },
     toggleImportanceOf(state, action) {
       const id = action.payload
       const noteToChange = state.find(n => n.id === id)
@@ -21,6 +19,9 @@ const noteSlice = createSlice({
         note.id !== id ? note : changedNote
       )
     },
+    appendNote(state, action) {
+      state.push(action.payload)
+    },
     setNotes(state, action) {
       return action.payload
     }
@@ -28,5 +29,22 @@ const noteSlice = createSlice({
 })
 
 
-export const { createNote, toggleImportanceOf, setNotes } = noteSlice.actions
+export const { toggleImportanceOf, appendNote, setNotes } = noteSlice.actions
+
+// Define redux thunks here
+export const initializeNotes = () => {
+  return async dispatch => {
+    const notes = await notesService.getAll()
+    dispatch(setNotes(notes))
+  }
+}
+
+export const createNote = content => {
+  return async dispatch => {
+    const newNote = await notesService.createNew(content)
+    dispatch(appendNote(newNote))
+  }
+}
+
+
 export default noteSlice.reducer
