@@ -1,15 +1,13 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { voteForAnecdote, sortAnecdotes, setAnecdotes } from '../reducers/anecdoteReducer'
-import { setNotification, resetNotification } from '../reducers/notificationReducer'
+import { voteAnecdote, sortAnecdotes } from '../reducers/anecdoteReducer'
+import { setNotificationWithTimeout } from '../reducers/notificationReducer'
 import { useEffect } from 'react'
-import anecdotesService from '../services/anecdotes'
+import { initializeAnecdotes } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
   useEffect(() => {
-    anecdotesService.getAll().then(anecdotes => {
-      dispatch(setAnecdotes(anecdotes))
-    })
+   dispatch(initializeAnecdotes())
   }, [dispatch])
 
   const anecdotes = useSelector(state => {
@@ -17,13 +15,10 @@ const AnecdoteList = () => {
   })
 
   const vote = (id) => {
-    dispatch(voteForAnecdote(id))
-    dispatch(sortAnecdotes())
     const anecdote = anecdotes.find(anecdote => anecdote.id === id)
-    dispatch(setNotification(`You voted for '${anecdote.content}'`))
-    setTimeout(() => {
-      dispatch(resetNotification())
-    }, 5000)
+    dispatch(voteAnecdote(anecdote))
+    dispatch(sortAnecdotes())
+    dispatch(setNotificationWithTimeout(`You voted for '${anecdote.content}'`, 5))
   }
   return (
       anecdotes.map(anecdote =>
