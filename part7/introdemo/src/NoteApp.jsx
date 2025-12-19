@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   Link,
@@ -77,7 +76,7 @@ const Login = (props) => {
   )
 }
 
-const App = () => {
+const NoteApp = () => {
   const [notes] = useState([
     {
       id: 1,
@@ -141,4 +140,4 @@ const App = () => {
   )
 }
 
-export default App
+export default NoteApp
