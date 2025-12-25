@@ -4,7 +4,6 @@ import blogService from "./services/blogs"
 import loginService from "./services/login"
 import LoginForm from "./components/LoginForm"
 import Notification from "./components/Notification"
-import Logout from "./components/Logout"
 import Togglable from "./components/Togglable"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -24,6 +23,13 @@ import Home from "./components/Home"
 import { BlogInfo } from "./components/Blog"
 import Navigation from "./components/Navigation"
 
+// Helper function to normalize blog objects and prevent Redux mutations
+const normalizeBlog = (blog) => ({
+  ...blog,
+  user: blog.user ? { ...blog.user } : blog.user,
+  comments: Array.isArray(blog.comments) ? [...blog.comments] : [],
+})
+
 const App = () => {
   const blogs = useSelector((state) => state.blogs)
   const user = useSelector((state) => state.user)
@@ -38,7 +44,10 @@ const App = () => {
   }
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => dispatch(setBlogs(blogs)))
+    blogService.getAll().then((blogs) => {
+      const normalizedBlogs = blogs.map(normalizeBlog)
+      dispatch(setBlogs(normalizedBlogs))
+    })
   }, [dispatch])
 
   useEffect(() => {
@@ -52,7 +61,8 @@ const App = () => {
 
   const handleCreate = async (blogObject) => {
     const returnedBlog = await blogService.create(blogObject)
-    dispatch(addBlog(returnedBlog))
+    const normalizedBlog = normalizeBlog(returnedBlog)
+    dispatch(addBlog(normalizedBlog))
     showNotification(
       `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
       "info",
@@ -81,13 +91,10 @@ const App = () => {
   }
 
   const handleLike = async (id) => {
-    const blog = blogs.find((blog) => blog.id === id)
-    if (!blog) return
-    const updatedBlog = await blogService.update(id, {
-      ...blog,
-      likes: blog.likes + 1,
-    })
-    dispatch(updateBlog(updatedBlog))
+    // Use atomic like endpoint - no need to read current state
+    const updatedBlog = await blogService.like(id)
+    const normalizedBlog = normalizeBlog(updatedBlog)
+    dispatch(updateBlog(normalizedBlog))
   }
 
   const handleRemove = async (id) => {
@@ -96,10 +103,29 @@ const App = () => {
       showNotification("Blog not found", "error")
       return
     }
+    // Store blog info before removal for notification
+    const blogTitle = blog.title
+    const blogAuthor = blog.author
     await blogService.remove(id)
     dispatch(removeBlog(id))
-    showNotification(`Blog ${blog.title} by ${blog.author} removed`, "info")
+    showNotification(`Blog ${blogTitle} by ${blogAuthor} removed`, "info")
     navigate("/")
+  }
+
+  const handleAddComment = async (id, comment) => {
+    try {
+      const updatedBlog = await blogService.addComment(id, comment)
+      const normalizedBlog = normalizeBlog(updatedBlog)
+      dispatch(updateBlog(normalizedBlog))
+      showNotification("Comment added", "info")
+    } catch (error) {
+      console.error("Error adding comment:", error)
+      if (error.response?.status === 404) {
+        showNotification("Blog not found", "error")
+      } else {
+        showNotification("Failed to add comment", "error")
+      }
+    }
   }
 
   const canRemove = (blog) => {
@@ -139,6 +165,7 @@ const App = () => {
               handleLike={handleLike}
               canRemove={canRemove}
               handleRemove={handleRemove}
+              handleAddComment={handleAddComment}
             />
           }
         />

@@ -3,20 +3,40 @@ const initialState = []
 const blogsReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_BLOGS":
-      return action.payload
+      // Ensure we create new references for nested structures to avoid mutations
+      return action.payload.map((blog) => ({
+        ...blog,
+        user: blog.user ? { ...blog.user } : blog.user,
+        comments: Array.isArray(blog.comments) ? [...blog.comments] : [],
+      }))
     case "ADD_BLOG":
-      return state.concat(action.payload)
+      // Ensure we create new references for nested structures to avoid mutations
+      const newBlog = {
+        ...action.payload,
+        user: action.payload.user
+          ? { ...action.payload.user }
+          : action.payload.user,
+        comments: Array.isArray(action.payload.comments)
+          ? [...action.payload.comments]
+          : [],
+      }
+      return state.concat(newBlog)
     case "UPDATE_BLOG":
-      return state.map((blog) =>
-        blog.id === action.payload.id
-          ? {
-              ...action.payload,
-              user: action.payload.user
-                ? { ...action.payload.user }
-                : action.payload.user,
-            }
-          : blog,
-      )
+      return state.map((blog) => {
+        if (blog.id !== action.payload.id) {
+          return blog
+        }
+        // Ensure we create new references for nested structures to avoid mutations
+        return {
+          ...action.payload,
+          user: action.payload.user
+            ? { ...action.payload.user }
+            : action.payload.user,
+          comments: Array.isArray(action.payload.comments)
+            ? [...action.payload.comments]
+            : [],
+        }
+      })
     case "REMOVE_BLOG":
       return state.filter((blog) => blog.id !== action.payload)
     default:

@@ -23,6 +23,7 @@ export const NotificationContextProvider = (props) => {
   )
 }
 
+// custom hooks
 export const useNotificationValue = () => {
   const notificationAndDispatch = useContext(NotificationContext)
   return notificationAndDispatch[0]

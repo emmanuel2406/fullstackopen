@@ -1,7 +1,14 @@
 import { useSelector } from "react-redux"
 import { useMatch, Link } from "react-router-dom"
+import Comments from "./Comments"
+import CommentForm from "./CommentForm"
 
-const BlogInfo = ({ handleLike, canRemove, handleRemove }) => {
+const BlogInfo = ({
+  handleLike,
+  canRemove,
+  handleRemove,
+  handleAddComment,
+}) => {
   const blogs = useSelector((state) => state.blogs)
   const match = useMatch("/blogs/:id")
   const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
@@ -15,7 +22,9 @@ const BlogInfo = ({ handleLike, canRemove, handleRemove }) => {
 
   return (
     <div>
-      <h2>{blog.title}</h2>
+      <h2>
+        {blog.title} {blog.author}
+      </h2>
       <a href={blog.url}>{blog.url}</a>
       <br />
       {blog.likes} likes
@@ -34,6 +43,8 @@ const BlogInfo = ({ handleLike, canRemove, handleRemove }) => {
           </button>
         </div>
       )}
+      <Comments comments={blog.comments} />
+      <CommentForm blogId={blog.id} addComment={handleAddComment} />
     </div>
   )
 }
