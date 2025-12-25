@@ -5,6 +5,14 @@ import {
   resetNotification,
 } from "../reducers/notificationReducer"
 import Notification from "./Notification"
+import { Form } from "react-bootstrap"
+import {
+  LoginDialog,
+  LoginBox,
+  LoginTitle,
+  StyledForm,
+  CrimsonButton,
+} from "./styles"
 
 const LoginForm = ({ loginUser }) => {
   const dispatch = useDispatch()
@@ -25,35 +33,40 @@ const LoginForm = ({ loginUser }) => {
       }, 5000)
     }
   }
+
   return (
-    <form onSubmit={handleLogin}>
-      <Notification />
-      <div>
-        <label>
-          username:
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          password:
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </label>
-      </div>
-      <button type="submit" name="login">
-        login
-      </button>
-    </form>
+    <LoginDialog>
+      <LoginBox>
+        <LoginTitle>🔐 Log In</LoginTitle>
+        <Notification />
+        <StyledForm onSubmit={handleLogin}>
+          <Form.Group className="mb-3">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              value={username}
+              name="Username"
+              placeholder="Enter your username"
+              onChange={({ target }) => setUsername(target.value)}
+              autoFocus
+            />
+          </Form.Group>
+          <Form.Group className="mb-4">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              name="Password"
+              placeholder="Enter your password"
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </Form.Group>
+          <CrimsonButton type="submit" name="login" className="w-100">
+            Login
+          </CrimsonButton>
+        </StyledForm>
+      </LoginBox>
+    </LoginDialog>
   )
 }
 

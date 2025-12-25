@@ -1,17 +1,24 @@
+import {
+  CommentsContainer,
+  CommentsTitle,
+  CommentsList,
+  CommentItem,
+} from "./styles"
+
 const Comments = ({ comments }) => {
   if (!comments || comments.length === 0) {
     return null
   }
 
   return (
-    <div>
-      <h3>Comments</h3>
-      <ul>
+    <CommentsContainer>
+      <CommentsTitle>💭 Comments ({comments.length})</CommentsTitle>
+      <CommentsList>
         {comments.map((comment, index) => (
-          <li key={index}>{comment}</li>
+          <CommentItem key={index}>{comment}</CommentItem>
         ))}
-      </ul>
-    </div>
+      </CommentsList>
+    </CommentsContainer>
   )
 }
 

@@ -4,7 +4,6 @@ import blogService from "./services/blogs"
 import loginService from "./services/login"
 import LoginForm from "./components/LoginForm"
 import Notification from "./components/Notification"
-import Togglable from "./components/Togglable"
 import { useDispatch, useSelector } from "react-redux"
 import {
   setNotification,
@@ -22,6 +21,7 @@ import { Routes, Route, useNavigate } from "react-router-dom"
 import Home from "./components/Home"
 import { BlogInfo } from "./components/Blog"
 import Navigation from "./components/Navigation"
+import { SectionTitle } from "./components/styles"
 
 // Helper function to normalize blog objects and prevent Redux mutations
 const normalizeBlog = (blog) => ({
@@ -75,14 +75,7 @@ const App = () => {
     dispatch(setUsername(user.username))
     blogService.setToken(user.token)
   }
-  const loginForm = () => (
-    <>
-      <h2>Log in to application</h2>
-      <Togglable buttonLabel="log in">
-        <LoginForm loginUser={handleLogin} />
-      </Togglable>
-    </>
-  )
+  const loginForm = () => <LoginForm loginUser={handleLogin} />
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogappUser")
@@ -142,7 +135,7 @@ const App = () => {
   return (
     <div>
       <Notification />
-      <h2>blogs</h2>
+      <SectionTitle>📚 Blogs</SectionTitle>
       <Navigation username={user.username} handleLogout={handleLogout} />
       <Routes>
         <Route

@@ -3,6 +3,7 @@ import { useSelector } from "react-redux"
 import { Blog } from "./Blog"
 import BlogForm from "./BlogForm"
 import Togglable from "./Togglable"
+import { StyledTable } from "./styles"
 
 const Home = ({ handleCreate, handleLike, handleRemove, canRemove }) => {
   const blogs = useSelector((state) => state.blogs)
@@ -13,6 +14,8 @@ const Home = ({ handleCreate, handleLike, handleRemove, canRemove }) => {
     await handleCreate(blogObject)
   }
 
+  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
+
   return (
     <>
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
@@ -20,11 +23,19 @@ const Home = ({ handleCreate, handleLike, handleRemove, canRemove }) => {
         <BlogForm createBlog={handleCreateWithToggle} />
       </Togglable>
 
-      {blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
+      <StyledTable striped bordered hover>
+        <thead>
+          <tr>
+            <th>Title & Author</th>
+            <th>Likes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedBlogs.map((blog) => (
+            <Blog key={blog.id} blog={blog} />
+          ))}
+        </tbody>
+      </StyledTable>
     </>
   )
 }

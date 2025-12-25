@@ -1,6 +1,13 @@
 import { useSelector } from "react-redux"
 import { useMatch, useLocation } from "react-router-dom"
-import { Link } from "react-router-dom"
+import {
+  StyledTable,
+  CrimsonLink,
+  SectionTitle,
+  CrimsonContainer,
+  TableCell,
+  CenteredCell,
+} from "./styles"
 
 const User = () => {
   const blogs = useSelector((state) => state.blogs)
@@ -17,17 +24,28 @@ const User = () => {
     (userBlogs.length > 0 ? userBlogs[0].user.name : "Unknown User")
 
   return (
-    <div>
-      <h2>{userName}</h2>
-      <h3>
-        <b>added blogs</b>
+    <CrimsonContainer>
+      <SectionTitle>{userName}</SectionTitle>
+      <h3 style={{ color: "#666", marginBottom: "15px" }}>
+        <b>Added Blogs</b>
       </h3>
-      <ul>
+      <ul style={{ listStyle: "none", padding: 0 }}>
         {userBlogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
+          <li
+            key={blog.id}
+            style={{
+              padding: "10px",
+              marginBottom: "8px",
+              background: "rgba(165, 28, 48, 0.05)",
+              borderRadius: "5px",
+              borderLeft: "3px solid #a51c30",
+            }}
+          >
+            {blog.title}
+          </li>
         ))}
       </ul>
-    </div>
+    </CrimsonContainer>
   )
 }
 
@@ -46,29 +64,30 @@ const Users = () => {
   const users = Object.values(userBlogCounts)
   return (
     <div>
-      <h2>Users</h2>
-      <table>
+      <SectionTitle>Users</SectionTitle>
+      <StyledTable striped bordered hover>
         <thead>
           <tr>
             <th>Name</th>
-            <th>
-              <b>Blogs created</b>
-            </th>
+            <th>Blogs Created</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user, index) => (
             <tr key={index}>
-              <td>
-                <Link to={`/users/${user.id}`} state={{ userName: user.name }}>
+              <TableCell>
+                <CrimsonLink
+                  to={`/users/${user.id}`}
+                  state={{ userName: user.name }}
+                >
                   {user.name}
-                </Link>
-              </td>
-              <td>{user.count}</td>
+                </CrimsonLink>
+              </TableCell>
+              <CenteredCell>{user.count}</CenteredCell>
             </tr>
           ))}
         </tbody>
-      </table>
+      </StyledTable>
     </div>
   )
 }

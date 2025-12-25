@@ -1,7 +1,17 @@
 import { useSelector } from "react-redux"
-import { useMatch, Link } from "react-router-dom"
+import { useMatch } from "react-router-dom"
 import Comments from "./Comments"
 import CommentForm from "./CommentForm"
+import {
+  DeleteButton,
+  LikeButton,
+  CrimsonLink,
+  SectionTitle,
+  CrimsonContainer,
+  TableCell,
+  CenteredCell,
+  HARVARD_CRIMSON,
+} from "./styles"
 
 const BlogInfo = ({
   handleLike,
@@ -16,54 +26,53 @@ const BlogInfo = ({
     return <div>Blog not found</div>
   }
 
-  const deleteStyle = {
-    backgroundColor: "lightblue",
-  }
-
   return (
-    <div>
-      <h2>
-        {blog.title} {blog.author}
-      </h2>
-      <a href={blog.url}>{blog.url}</a>
-      <br />
-      {blog.likes} likes
-      <button name="like" onClick={() => handleLike(blog.id)}>
-        like
-      </button>
-      <p>added by {blog.user.name}</p>
+    <CrimsonContainer>
+      <SectionTitle>
+        {blog.title} by {blog.author}
+      </SectionTitle>
+      <p>
+        <a
+          href={blog.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: HARVARD_CRIMSON, fontWeight: 600 }}
+        >
+          {blog.url}
+        </a>
+      </p>
+      <p style={{ fontSize: "1.1em", marginBottom: "10px" }}>
+        <strong>{blog.likes}</strong> likes{" "}
+        <LikeButton name="like" onClick={() => handleLike(blog.id)}>
+          ❤️ like
+        </LikeButton>
+      </p>
+      <p style={{ color: "#666", marginBottom: "15px" }}>
+        added by <strong>{blog.user.name}</strong>
+      </p>
       {canRemove && (
-        <div>
-          <button
-            style={deleteStyle}
-            name="remove"
-            onClick={() => handleRemove(blog.id)}
-          >
-            remove
-          </button>
+        <div style={{ marginBottom: "20px" }}>
+          <DeleteButton name="remove" onClick={() => handleRemove(blog.id)}>
+            🗑️ remove
+          </DeleteButton>
         </div>
       )}
       <Comments comments={blog.comments} />
       <CommentForm blogId={blog.id} addComment={handleAddComment} />
-    </div>
+    </CrimsonContainer>
   )
 }
 
 const Blog = ({ blog }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  }
-
   return (
-    <div style={blogStyle}>
-      <Link to={`/blogs/${blog.id}`}>
-        {blog.title} {blog.author}
-      </Link>
-    </div>
+    <tr>
+      <TableCell>
+        <CrimsonLink to={`/blogs/${blog.id}`}>
+          {blog.title} by {blog.author}
+        </CrimsonLink>
+      </TableCell>
+      <CenteredCell>❤️ {blog.likes}</CenteredCell>
+    </tr>
   )
 }
 
