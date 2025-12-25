@@ -1,12 +1,10 @@
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import "./index.css"
-import Blog from "./components/Blog"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 import LoginForm from "./components/LoginForm"
 import Notification from "./components/Notification"
 import Logout from "./components/Logout"
-import BlogForm from "./components/BlogForm"
 import Togglable from "./components/Togglable"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -20,11 +18,17 @@ import {
   removeBlog,
 } from "./reducers/blogsReducer"
 import { setUsername, clearUser } from "./reducers/userReducer"
+import { User, Users } from "./components/Users"
+import { Routes, Route, useNavigate } from "react-router-dom"
+import Home from "./components/Home"
+import { BlogInfo } from "./components/Blog"
+import Navigation from "./components/Navigation"
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs)
   const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const showNotification = (message, type = "info") => {
     dispatch(setNotification(message, type))
@@ -47,7 +51,6 @@ const App = () => {
   }, [])
 
   const handleCreate = async (blogObject) => {
-    blogFormRef.current.toggleVisibility()
     const returnedBlog = await blogService.create(blogObject)
     dispatch(addBlog(returnedBlog))
     showNotification(
@@ -55,15 +58,6 @@ const App = () => {
       "info",
     )
   }
-
-  const blogFormRef = useRef()
-
-  const blogForm = () => (
-    <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-      <h2>create new</h2>
-      <BlogForm createBlog={handleCreate} />
-    </Togglable>
-  )
 
   const handleLogin = async (userObject) => {
     const user = await loginService.login(userObject)
@@ -88,6 +82,7 @@ const App = () => {
 
   const handleLike = async (id) => {
     const blog = blogs.find((blog) => blog.id === id)
+    if (!blog) return
     const updatedBlog = await blogService.update(id, {
       ...blog,
       likes: blog.likes + 1,
@@ -104,6 +99,7 @@ const App = () => {
     await blogService.remove(id)
     dispatch(removeBlog(id))
     showNotification(`Blog ${blog.title} by ${blog.author} removed`, "info")
+    navigate("/")
   }
 
   const canRemove = (blog) => {
@@ -121,25 +117,32 @@ const App = () => {
     <div>
       <Notification />
       <h2>blogs</h2>
-      <div>
-        <p>
-          {user.username} logged in
-          <Logout handleLogout={handleLogout} />
-        </p>
-      </div>
-      {blogForm()}
-
-      {blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            handleLike={handleLike}
-            removeBlog={handleRemove}
-            canRemove={canRemove(blog)}
-          />
-        ))}
+      <Navigation username={user.username} handleLogout={handleLogout} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              handleCreate={handleCreate}
+              handleLike={handleLike}
+              handleRemove={handleRemove}
+              canRemove={canRemove}
+            />
+          }
+        />
+        <Route path="/users" element={<Users />} />
+        <Route path="/users/:id" element={<User />} />
+        <Route
+          path="/blogs/:id"
+          element={
+            <BlogInfo
+              handleLike={handleLike}
+              canRemove={canRemove}
+              handleRemove={handleRemove}
+            />
+          }
+        />
+      </Routes>
     </div>
   )
 }

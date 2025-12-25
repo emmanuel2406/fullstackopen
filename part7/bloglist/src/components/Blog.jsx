@@ -1,71 +1,28 @@
-import { useState } from "react"
-import { useDispatch } from "react-redux"
-import { setBlogs } from "../reducers/blogsReducer"
 import { useSelector } from "react-redux"
-import {
-  setNotification,
-  resetNotification,
-} from "../reducers/notificationReducer"
+import { useMatch, Link } from "react-router-dom"
 
-const Blog = ({ blog, handleLike, removeBlog, canRemove }) => {
-  const dispatch = useDispatch()
+const BlogInfo = ({ handleLike, canRemove, handleRemove }) => {
   const blogs = useSelector((state) => state.blogs)
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
+  const match = useMatch("/blogs/:id")
+  const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
+  if (!blog) {
+    return <div>Blog not found</div>
   }
 
   const deleteStyle = {
     backgroundColor: "lightblue",
   }
 
-  const [expanded, setExpanded] = useState(false)
-
-  const toggleExpanded = () => {
-    setExpanded(!expanded)
-  }
-
-  const handleRemove = async (id) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      await removeBlog(id)
-      dispatch(setBlogs(blogs.filter((blog) => blog.id !== id)))
-      dispatch(
-        setNotification(`Blog ${blog.title} by ${blog.author} removed`, "info"),
-      )
-      setTimeout(() => {
-        dispatch(resetNotification())
-      }, 5000)
-    }
-  }
-
-  if (!expanded) {
-    return (
-      <div style={blogStyle}>
-        {blog.title} {blog.author}{" "}
-        <button name="view" onClick={() => toggleExpanded()}>
-          view
-        </button>
-      </div>
-    )
-  }
-
   return (
-    <div style={blogStyle}>
-      <div>
-        {blog.title} {blog.author}{" "}
-        <button onClick={() => toggleExpanded()}>hide</button>
-      </div>
-      <div>{blog.url}</div>
-      <div>
-        likes {blog.likes}
-        <button name="like" onClick={() => handleLike(blog.id)}>
-          like
-        </button>
-      </div>
-      <div>{blog.user.name}</div>
+    <div>
+      <h2>{blog.title}</h2>
+      <a href={blog.url}>{blog.url}</a>
+      <br />
+      {blog.likes} likes
+      <button name="like" onClick={() => handleLike(blog.id)}>
+        like
+      </button>
+      <p>added by {blog.user.name}</p>
       {canRemove && (
         <div>
           <button
@@ -81,4 +38,22 @@ const Blog = ({ blog, handleLike, removeBlog, canRemove }) => {
   )
 }
 
-export default Blog
+const Blog = ({ blog }) => {
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
+  }
+
+  return (
+    <div style={blogStyle}>
+      <Link to={`/blogs/${blog.id}`}>
+        {blog.title} {blog.author}
+      </Link>
+    </div>
+  )
+}
+
+export { Blog, BlogInfo }

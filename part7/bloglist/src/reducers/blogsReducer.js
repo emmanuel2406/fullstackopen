@@ -8,7 +8,14 @@ const blogsReducer = (state = initialState, action) => {
       return state.concat(action.payload)
     case "UPDATE_BLOG":
       return state.map((blog) =>
-        blog.id === action.payload.id ? action.payload : blog,
+        blog.id === action.payload.id
+          ? {
+              ...action.payload,
+              user: action.payload.user
+                ? { ...action.payload.user }
+                : action.payload.user,
+            }
+          : blog,
       )
     case "REMOVE_BLOG":
       return state.filter((blog) => blog.id !== action.payload)
