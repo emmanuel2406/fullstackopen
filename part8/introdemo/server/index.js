@@ -131,6 +131,9 @@ const resolvers = {
     },
     editNumber: async (root, args) => {
       const person = await Person.findOne({ name: args.name });
+      if (!person) {
+        return null;
+      }
       person.phone = args.phone;
       try {
         await person.save();
@@ -143,6 +146,7 @@ const resolvers = {
           },
         });
       }
+      return person;
     },
     createUser: async (root, args) => {
       const user = new User({ username: args.username });

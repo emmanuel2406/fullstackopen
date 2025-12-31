@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client/react";
 import { EDIT_NUMBER } from "../queries";
 
@@ -6,13 +6,21 @@ const PhoneForm = ({ setError }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
-  const [changeNumber] = useMutation(EDIT_NUMBER, {
-    onCompleted: (data) => {
-      if (!data.editNumber) {
-        setError("Person not found");
-      }
+  const [changeNumber, result] = useMutation(EDIT_NUMBER, {
+    onError: (error) => {
+      setError(
+        error.graphQLErrors?.[0]?.message ||
+          error.message ||
+          "Editing number failed"
+      );
     },
   });
+
+  useEffect(() => {
+    if (result.data && result.data.editNumber === null) {
+      setError("Person not found");
+    }
+  }, [result.data, setError]);
 
   const submit = (event) => {
     event.preventDefault();
