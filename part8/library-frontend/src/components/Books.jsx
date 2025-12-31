@@ -1,39 +1,50 @@
+import { useState } from "react";
 import { useQuery } from "@apollo/client/react";
-import { ALL_BOOKS } from "../queries";
+
+import GenreFilter from "./GenreFilter";
+import BookTable from "./BookTable";
+
+import { ALL_BOOKS, ALL_BOOKS_BY_GENRE } from "../queries";
 
 const Books = (props) => {
-  const result = useQuery(ALL_BOOKS);
+  const [filteredGenre, setFilteredGenre] = useState(null);
+
+  const fullResult = useQuery(ALL_BOOKS);
+
+  const filteredResult = useQuery(ALL_BOOKS_BY_GENRE, {
+    variables: { genre: filteredGenre },
+    skip: !filteredGenre,
+  });
 
   if (!props.show) {
     return null;
   }
 
-  if (result.loading) {
+  if (fullResult.loading || filteredResult.loading) {
     return <div>loading...</div>;
   }
 
-  const books = result.data.allBooks;
+  const allBooks = fullResult.data.allBooks;
+  const possibleGenres = [...new Set(allBooks.flatMap((b) => b.genres))];
+
+  const filteredBooks = filteredGenre ? filteredResult.data.allBooks : allBooks;
 
   return (
     <div>
       <h2>books</h2>
 
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {books.map((a) => (
-            <tr key={a.id}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {filteredGenre && (
+        <p>
+          in genre <b>{filteredGenre}</b>
+        </p>
+      )}
+
+      <BookTable books={filteredBooks} />
+
+      <GenreFilter
+        setFilteredGenre={setFilteredGenre}
+        genres={possibleGenres}
+      />
     </div>
   );
 };

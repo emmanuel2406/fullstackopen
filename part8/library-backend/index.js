@@ -75,7 +75,7 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      let filteredBooks = await Book.find({});
+      let filteredBooks = await Book.find({}).populate("author");
       if (args.author) {
         filteredBooks = filteredBooks.filter(
           (book) => book.author.name === args.author
@@ -92,6 +92,38 @@ const resolvers = {
       return Author.find({});
     },
     me: (root, args, { currentUser }) => currentUser,
+  },
+  Author: {
+    bookCount: async (root) => {
+      const count = await Book.countDocuments({ author: root._id });
+      return count;
+    },
+  },
+  Book: {
+    author: async (root) => {
+      // If author is already populated, return it directly
+      if (root.author && root.author.name) {
+        return root.author;
+      }
+      // If no author ID, throw an error since author is non-nullable
+      if (!root.author) {
+        throw new GraphQLError(`Book "${root.title}" has no author reference`, {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+      // Otherwise, fetch it by ID
+      const author = await Author.findById(root.author);
+      if (!author) {
+        throw new GraphQLError(`Author not found for book "${root.title}"`, {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+      return author;
+    },
   },
   Mutation: {
     addBook: async (root, args, { currentUser }) => {
