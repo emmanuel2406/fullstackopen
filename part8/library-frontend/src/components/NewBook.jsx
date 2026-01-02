@@ -7,6 +7,7 @@ import {
   ALL_BOOKS_BY_GENRE,
   ALL_AUTHORS,
 } from "../queries";
+import { updateCache } from "../App";
 
 const NewBook = (props) => {
   const [title, setTitle] = useState("");
@@ -22,22 +23,11 @@ const NewBook = (props) => {
       const bookGenres = newBook.genres || response.request.variables.genres;
 
       // Update ALL_BOOKS cache (no filter)
-      cache.updateQuery({ query: ALL_BOOKS }, (existingData) => {
-        if (!existingData) return undefined;
-        return { allBooks: existingData.allBooks.concat(newBook) };
-      });
+      updateCache(cache, ALL_BOOKS, newBook);
 
       // Update cache for each genre filter
       bookGenres.forEach((genre) => {
-        cache.updateQuery(
-          { query: ALL_BOOKS_BY_GENRE, variables: { genre } },
-          (existingData) => {
-            if (!existingData) return undefined;
-            return {
-              allBooks: existingData.allBooks.concat(newBook),
-            };
-          }
-        );
+        updateCache(cache, ALL_BOOKS_BY_GENRE, newBook);
       });
     },
     onCompleted: () => {

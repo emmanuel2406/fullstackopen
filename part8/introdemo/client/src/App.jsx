@@ -38,7 +38,7 @@ const App = () => {
       const addedPerson = data.data.personAdded;
       notify(`${addedPerson.name} added`);
 
-      updateCache(cache, ALL_PERSONS, addedPerson);
+      updateCache(cache, { query: ALL_PERSONS }, addedPerson);
     },
   });
 

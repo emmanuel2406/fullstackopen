@@ -13,12 +13,21 @@
   "license": "ISC",
   "packageManager": "pnpm@10.15.0",
   "dependencies": {
-    "@apollo/server": "^5.2.0",
+    "@apollo/server": "latest",
+    "@as-integrations/express5": "^1.1.2",
+    "@graphql-tools/schema": "^10.0.30",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "drainHttpServer": "link:@apollo/server/plugin/drainHttpServer",
+    "express": "^5.2.1",
     "graphql": "^16.12.0",
+    "graphql-subscriptions": "^3.0.0",
+    "graphql-ws": "^6.0.6",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.1.0",
+    "schema\n": "link:@graphql-tools/schema\n",
     "standalone": "link:@apollo/server/standalone",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "ws": "^8.18.0"
   }
 }
