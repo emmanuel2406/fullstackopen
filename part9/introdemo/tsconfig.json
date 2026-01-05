@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "types": ["node"],
+    "module": "commonjs",
+    "target": "es2019",
+    "strict": true
+  }
+}
