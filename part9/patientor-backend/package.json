@@ -1,0 +1,32 @@
+{
+  "name": "patientor-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "lint": "eslint .",
+    "dev": "ts-node-dev index.ts",
+    "start": "node build/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.0",
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@stylistic/eslint-plugin": "^5.6.1",
+    "@types/cors": "^2.8.19",
+    "@types/eslint__js": "^9.14.0",
+    "@types/express": "^5.0.6",
+    "eslint": "^9.39.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript-eslint": "^8.52.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  }
+}
