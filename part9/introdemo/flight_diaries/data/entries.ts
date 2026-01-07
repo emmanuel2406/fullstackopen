@@ -1,5 +1,5 @@
 import { DiaryEntry } from "../src/types";
-import toNewDiaryEntry from "../src/utils";
+import { newEntrySchema } from "../src/utils";
 
 const data = [
   {
@@ -34,7 +34,7 @@ const data = [
 
 const diaryEntries: DiaryEntry[] = data.map((obj) => {
   // Assert return is DiaryEntry instead of NewDiaryEntry
-  const object = toNewDiaryEntry(obj) as DiaryEntry;
+  const object = newEntrySchema.parse(obj) as DiaryEntry;
   object.id = obj.id;
   return object;
 });

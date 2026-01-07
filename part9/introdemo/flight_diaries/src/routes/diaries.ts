@@ -1,8 +1,9 @@
 import express from "express";
-import { Response } from "express";
+import { Request, Response, NextFunction } from "express";
+import * as z from "zod";
 import diaryService from "../services/diaryService";
-import { NonSensitiveDiaryEntry } from "../types";
-import toNewDiaryEntry from "../utils";
+import { NonSensitiveDiaryEntry, NewDiaryEntry } from "../types";
+import { newEntrySchema } from "../utils";
 
 const router: express.Router = express.Router();
 
@@ -20,11 +21,38 @@ router.get("/:id", (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
-  const newDiaryEntry = toNewDiaryEntry(req.body);
+const newDiaryParser = (req: Request, _res: Response, next: NextFunction) => {
+  try {
+    newEntrySchema.parse(req.body);
+    next();
+  } catch (error: unknown) {
+    next(error);
+  }
+};
 
-  const addedEntry = diaryService.addDiary(newDiaryEntry);
-  res.json(addedEntry);
-});
+const errorMiddleware = (
+  error: unknown,
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (error instanceof z.ZodError) {
+    res.status(400).send({ error: error.issues });
+  } else {
+    next(error);
+  }
+};
+
+router.post(
+  "/",
+  newDiaryParser,
+  // third generic type of Request is the body type
+  (req: Request<unknown, unknown, NewDiaryEntry>, res: Response) => {
+    const addedEntry = diaryService.addDiary(req.body);
+    res.json(addedEntry);
+  }
+);
+
+router.use(errorMiddleware);
 
 export default router;

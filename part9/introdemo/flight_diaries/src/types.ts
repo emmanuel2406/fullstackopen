@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { newEntrySchema } from "./utils";
+
 export enum Weather {
   Sunny = "sunny",
   Rainy = "rainy",
@@ -13,6 +16,7 @@ export enum Visibility {
   Poor = "poor",
 }
 
+// Unavoidable duplication between ts interface and zod schema
 export interface DiaryEntry {
   id: number;
   date: string;
@@ -23,4 +27,5 @@ export interface DiaryEntry {
 
 export type NonSensitiveDiaryEntry = Omit<DiaryEntry, "comment">;
 
-export type NewDiaryEntry = Omit<DiaryEntry, "id">;
+// infer the type from schema
+export type NewDiaryEntry = z.infer<typeof newEntrySchema>;
