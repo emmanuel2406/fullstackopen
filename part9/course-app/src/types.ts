@@ -2,9 +2,13 @@ interface CoursePartBase {
   name: string;
   exerciseCount: number;
 }
-// Use a discriminated union - kind delimiter and required props
-export interface CoursePartBasic extends CoursePartBase {
+
+interface CoursePartDescriptiveBase extends CoursePartBase {
   description: string;
+}
+
+// Use a discriminated union - kind delimiter and required props
+export interface CoursePartBasic extends CoursePartDescriptiveBase {
   kind: "basic";
 }
 
@@ -13,13 +17,18 @@ export interface CoursePartGroup extends CoursePartBase {
   kind: "group";
 }
 
-export interface CoursePartBackground extends CoursePartBase {
-  description: string;
+export interface CoursePartBackground extends CoursePartDescriptiveBase {
   backgroundMaterial: string;
   kind: "background";
+}
+
+export interface CoursePartSpecial extends CoursePartDescriptiveBase {
+  requirements: string[];
+  kind: "special";
 }
 
 export type CoursePart =
   | CoursePartBasic
   | CoursePartGroup
-  | CoursePartBackground;
+  | CoursePartBackground
+  | CoursePartSpecial;

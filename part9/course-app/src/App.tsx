@@ -32,6 +32,13 @@ const App = () => {
         "https://type-level-typescript.com/template-literal-types",
       kind: "background",
     },
+    {
+      name: "Backend development",
+      exerciseCount: 21,
+      description: "Typing the backend",
+      requirements: ["nodejs", "jest"],
+      kind: "special",
+    },
   ];
 
   const totalExercises = courseParts.reduce(
