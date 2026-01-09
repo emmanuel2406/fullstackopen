@@ -1,7 +1,7 @@
 import express from "express";
 require("dotenv").config();
 import cors from "cors";
-import diagnoses from "../data/diagnoses";
+import diagnosisRouter from "./routes/diagnoses";
 import patientRouter from "./routes/patients";
 
 const app = express();
@@ -13,9 +13,7 @@ app.get("/api/ping", (_req, res) => {
   res.send("pong");
 });
 
-app.get("/api/diagnoses", (_req, res) => {
-  res.send(diagnoses);
-});
+app.use("/api/diagnoses", diagnosisRouter);
 
 app.use("/api/patients", patientRouter);
 
