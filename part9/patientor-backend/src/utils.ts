@@ -8,3 +8,8 @@ export const newPatientSchema = z.object({
   gender: z.enum(Gender),
   occupation: z.string(),
 });
+
+export const patientSchema = newPatientSchema.extend({
+  id: z.string(),
+  entries: z.array(z.unknown()),
+});
