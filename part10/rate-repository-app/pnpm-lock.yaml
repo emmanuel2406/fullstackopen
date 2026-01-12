@@ -32,6 +32,9 @@ importers:
       react-native-web:
         specifier: ~0.19.13
         version: 0.19.13(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react-router-native:
+        specifier: ^6.30.0
+        version: 6.30.0(react-native@0.73.6(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(react@18.2.0))(react@18.2.0)
     devDependencies:
       '@babel/core':
         specifier: ^7.20.0
@@ -1107,6 +1110,10 @@ packages:
     peerDependencies:
       react-native: '*'
 
+  '@remix-run/router@1.23.0':
+    resolution: {integrity: sha512-O3rHJzAQKamUz1fvE0Qaw0xSFqsA/yafi2iqeE0pvdFtCO1viYx8QL6f3Ln/aCCTLxs68SLf0KPM9eSeM8yBnA==}
+    engines: {node: '>=14.0.0'}
+
   '@segment/loosely-validate-event@2.0.0':
     resolution: {integrity: sha512-ZMCSfztDBqwotkl848ODgVcAmN4OItEWDCkshcKz0/W6gGSQayuuCtWV/MlodFivAZD793d6UgANd6wCXUfrIw==}
 
@@ -1183,6 +1190,9 @@ packages:
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
+
+  '@ungap/url-search-params@0.2.2':
+    resolution: {integrity: sha512-qQsguKXZVKdCixOHX9jqnX/K/1HekPDpGKyEcXHT+zR6EjGA7S4boSuelL4uuPv6YfhN0n8c4UxW+v/Z3gM2iw==}
 
   '@urql/core@2.3.6':
     resolution: {integrity: sha512-PUxhtBh7/8167HJK6WqBv6Z0piuiaZHQGYbhwpNL9aIQmLROPEdaUYkY4wh45wPQXcTpnd11l0q3Pw+TI11pdw==}
@@ -3617,6 +3627,19 @@ packages:
   react-refresh@0.14.2:
     resolution: {integrity: sha512-jCvmsr+1IUSMUyzOkRcvnVbX3ZYC6g9TDrDbFuFmRDq7PD4yaGbLKNQL6k2jnArV8hjYxh7hVhAZB6s9HDGpZA==}
     engines: {node: '>=0.10.0'}
+
+  react-router-native@6.30.0:
+    resolution: {integrity: sha512-xYlz29ku+QiqXztwGOmzCXZqT8ItihfO2VAT9uvUibRIJR423lnsxj85oDSsGP9Upie4NiX8VMS/Zd4vyueRww==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      react: '>=16.8'
+      react-native: '>=0.44'
+
+  react-router@6.30.0:
+    resolution: {integrity: sha512-D3X8FyH9nBcTSHGdEKurK7r8OYE1kKFn3d/CF+CoxbSHkxU7o37+Uh7eAHRXr6k2tSExXYO++07PeXJtA/dEhQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      react: '>=16.8'
 
   react-shallow-renderer@16.15.0:
     resolution: {integrity: sha512-oScf2FqQ9LFVQgA73vr86xl2NaOIX73rh+YFqcOp68CWj56tSfgtGKrEbyhCj0rSijyG9M1CYprTh39fBi5hzA==}
@@ -6178,6 +6201,8 @@ snapshots:
       nullthrows: 1.1.1
       react-native: 0.73.6(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(react@18.2.0)
 
+  '@remix-run/router@1.23.0': {}
+
   '@segment/loosely-validate-event@2.0.0':
     dependencies:
       component-type: 1.2.2
@@ -6260,6 +6285,8 @@ snapshots:
     dependencies:
       '@types/node': 25.0.5
     optional: true
+
+  '@ungap/url-search-params@0.2.2': {}
 
   '@urql/core@2.3.6(graphql@15.8.0)':
     dependencies:
@@ -9116,6 +9143,18 @@ snapshots:
   react-refresh@0.14.0: {}
 
   react-refresh@0.14.2: {}
+
+  react-router-native@6.30.0(react-native@0.73.6(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@ungap/url-search-params': 0.2.2
+      react: 18.2.0
+      react-native: 0.73.6(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(react@18.2.0)
+      react-router: 6.30.0(react@18.2.0)
+
+  react-router@6.30.0(react@18.2.0):
+    dependencies:
+      '@remix-run/router': 1.23.0
+      react: 18.2.0
 
   react-shallow-renderer@16.15.0(react@18.2.0):
     dependencies:
