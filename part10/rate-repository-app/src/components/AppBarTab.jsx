@@ -1,4 +1,6 @@
-import { Pressable, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { Link } from "react-router-native";
+
 import Text from "./Text";
 import theme from "../theme";
 
@@ -8,18 +10,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppBarTab = () => {
+const AppBarTab = ({ name, to }) => {
   return (
-    <Pressable>
-      <Text
-        color="inverted"
-        fontSize="subheading"
-        fontWeight="bold"
-        style={styles.text}
-      >
-        Repositories
+    <Link to={to} style={styles.container}>
+      <Text color="inverted" fontSize="subheading" fontWeight="bold">
+        {name}
       </Text>
-    </Pressable>
+    </Link>
   );
 };
 
