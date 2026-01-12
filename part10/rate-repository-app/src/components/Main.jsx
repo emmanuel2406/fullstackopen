@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { Route, Routes, Navigate } from "react-router-native";
+import { Route, Routes } from "react-router-native";
 import theme from "../theme";
 
 import RepositoryList from "./RepositoryList";

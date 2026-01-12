@@ -6,6 +6,7 @@ const theme = {
     appBarBackground: "#24292e",
     textInverted: "#f0f0f0",
     mainBackground: "#e1e4e8",
+    error: "#d73a4a",
   },
   fontSizes: {
     body: 14,
