@@ -4,6 +4,7 @@ import * as yup from "yup";
 
 import theme from "../theme";
 import Text from "./Text";
+import useSignIn from "../hooks/useSignIn";
 
 const styles = StyleSheet.create({
   flexContainer: {
@@ -43,8 +44,15 @@ const validationSchema = yup.object().shape({
 });
 
 const SignIn = () => {
-  const onSubmit = (values) => {
-    console.log(values);
+  const [signIn] = useSignIn();
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+    try {
+      const { data } = await signIn({ username, password });
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
   };
   const formik = useFormik({
     initialValues,
