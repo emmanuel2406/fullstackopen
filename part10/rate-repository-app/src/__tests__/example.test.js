@@ -49,8 +49,6 @@ describe("Form", () => {
     fireEvent.changeText(screen.getByPlaceholderText("Username"), "kalle");
     fireEvent.changeText(screen.getByPlaceholderText("Password"), "password");
 
-    screen.debug();
-
     fireEvent.press(screen.getByText("Submit"));
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -73,8 +71,6 @@ const Greeting = ({ name }) => {
 describe("Greeting", () => {
   it("renders a greeting message based on the name prop", () => {
     render(<Greeting name="Kalle" />);
-
-    screen.debug();
 
     expect(screen.getByText("Hello Kalle!")).toBeDefined();
   });

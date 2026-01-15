@@ -43,10 +43,12 @@ const processCount = (count) => {
   return count;
 };
 
-const StatItem = ({ count, text }) => {
+const StatItem = ({ count, text, testID }) => {
   return (
     <View style={styles.flexContainerStats}>
-      <Text fontWeight="bold">{processCount(count)}</Text>
+      <Text fontWeight="bold" testID={testID}>
+        {processCount(count)}
+      </Text>
       <Text color="textSecondary">{text}</Text>
     </View>
   );
@@ -54,29 +56,53 @@ const StatItem = ({ count, text }) => {
 
 const RepositoryItem = ({ repository }) => {
   return (
-    <>
+    <View testID="repositoryItem">
       <View style={styles.flexContainer}>
         <Image
           source={{ uri: repository.ownerAvatarUrl }}
           style={styles.flexItemImage}
         />
         <View style={styles.flexItemInfo}>
-          <Text fontWeight="bold" fontSize="subheading">
+          <Text
+            fontWeight="bold"
+            fontSize="subheading"
+            testID="repositoryFullName"
+          >
             {repository.fullName}
           </Text>
-          <Text color="textSecondary">{repository.description}</Text>
+          <Text color="textSecondary" testID="repositoryDescription">
+            {repository.description}
+          </Text>
           <View style={styles.blueBox}>
-            <Text color="inverted">{repository.language}</Text>
+            <Text color="inverted" testID="repositoryLanguage">
+              {repository.language}
+            </Text>
           </View>
         </View>
       </View>
       <View style={styles.flexContainer}>
-        <StatItem count={repository.stargazersCount} text="Stars" />
-        <StatItem count={repository.forksCount} text="Forks" />
-        <StatItem count={repository.reviewCount} text="Reviews" />
-        <StatItem count={repository.ratingAverage} text="Rating" />
+        <StatItem
+          count={repository.stargazersCount}
+          text="Stars"
+          testID="repositoryStargazersCount"
+        />
+        <StatItem
+          count={repository.forksCount}
+          text="Forks"
+          testID="repositoryForksCount"
+        />
+        <StatItem
+          count={repository.reviewCount}
+          text="Reviews"
+          testID="repositoryReviewCount"
+        />
+        <StatItem
+          count={repository.ratingAverage}
+          text="Rating"
+          testID="repositoryRatingAverage"
+        />
       </View>
-    </>
+    </View>
   );
 };
 
