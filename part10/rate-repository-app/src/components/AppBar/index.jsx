@@ -1,9 +1,9 @@
 import { View, StyleSheet, ScrollView } from "react-native";
 import { useQuery } from "@apollo/client/react";
 import Constants from "expo-constants";
-import theme from "../theme";
+import theme from "../../theme";
 
-import { ME } from "../graphql/queries";
+import { GET_CURRENT_USER } from "../../graphql/queries";
 
 import AppBarTab from "./AppBarTab";
 
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-  const { data } = useQuery(ME, {
+  const { data } = useQuery(GET_CURRENT_USER, {
     errorPolicy: "all",
     fetchPolicy: "cache-and-network",
   });
@@ -29,9 +29,16 @@ const AppBar = () => {
       <ScrollView horizontal>
         <AppBarTab name="Repositories" to="/" />
         {data?.me ? (
-          <AppBarTab name="Sign Out" to="/signout" />
+          <>
+            <AppBarTab name="Create a review" to="/reviewform" />
+            <AppBarTab name="My reviews" to="/myreviews" />
+            <AppBarTab name="Sign Out" to="/signout" />
+          </>
         ) : (
-          <AppBarTab name="Sign In" to="/signin" />
+          <>
+            <AppBarTab name="Sign In" to="/signin" />
+            <AppBarTab name="Sign Up" to="/signup" />
+          </>
         )}
       </ScrollView>
     </View>

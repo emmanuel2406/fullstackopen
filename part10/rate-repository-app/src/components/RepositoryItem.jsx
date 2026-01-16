@@ -1,8 +1,8 @@
-import { View, StyleSheet, Image, Dimensions } from "react-native";
+import { View, StyleSheet, Image, Pressable, Linking } from "react-native";
+import { useNavigate } from "react-router-native";
+
 import Text from "./Text";
 import theme from "../theme";
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   flexContainer: {
@@ -13,26 +13,36 @@ const styles = StyleSheet.create({
   },
   flexItemImage: {
     flexGrow: 0,
-    width: 48,
-    height: 48,
+    width: theme.sizes.imageWidth,
+    height: theme.sizes.imageHeight,
     borderRadius: 4,
   },
   flexItemInfo: {
-    flexGrow: 1,
+    flex: 1,
     paddingLeft: theme.padding.boundedBox,
+    paddingRight: theme.padding.boundedBox,
+  },
+  flexItemBox: {
+    alignSelf: "flex-start",
+    padding: theme.padding.boundedBox,
   },
   blueBox: {
-    alignSelf: "flex-start",
     backgroundColor: theme.colors.primary,
     borderRadius: 4,
-    padding: theme.padding.boundedBox,
+    margin: theme.padding.boundedBox,
+  },
+  largeBox: {
+    width: "100%",
+    margin: theme.padding.boundedBox,
+    padding: theme.padding.largeBox,
+    alignItems: "center",
   },
   flexContainerStats: {
     display: "flex",
     flexDirection: "column",
     alignContent: "center",
     alignItems: "center",
-    width: SCREEN_WIDTH / 4,
+    width: "25%",
   },
 });
 
@@ -54,9 +64,33 @@ const StatItem = ({ count, text, testID }) => {
   );
 };
 
-const RepositoryItem = ({ repository }) => {
+const GithubLink = ({ url }) => {
   return (
-    <View testID="repositoryItem">
+    <Pressable
+      style={[styles.blueBox, styles.largeBox]}
+      onPress={() => Linking.openURL(url)}
+    >
+      <Text
+        color="inverted"
+        fontSize="subheading"
+        fontWeight="bold"
+        testID="repositoryGithubLink"
+      >
+        Open in Github
+      </Text>
+    </Pressable>
+  );
+};
+
+const RepositoryItem = ({ repository, privateView }) => {
+  const navigate = useNavigate();
+  const handlePress = () => {
+    // only navigate if the repository is not already private
+    if (privateView) return;
+    navigate(`/repository/${repository.id}`);
+  };
+  return (
+    <Pressable testID="repositoryItem" onPress={handlePress}>
       <View style={styles.flexContainer}>
         <Image
           source={{ uri: repository.ownerAvatarUrl }}
@@ -73,7 +107,7 @@ const RepositoryItem = ({ repository }) => {
           <Text color="textSecondary" testID="repositoryDescription">
             {repository.description}
           </Text>
-          <View style={styles.blueBox}>
+          <View style={[styles.blueBox, styles.flexItemBox]}>
             <Text color="inverted" testID="repositoryLanguage">
               {repository.language}
             </Text>
@@ -102,7 +136,12 @@ const RepositoryItem = ({ repository }) => {
           testID="repositoryRatingAverage"
         />
       </View>
-    </View>
+      {privateView && (
+        <View style={styles.flexContainer}>
+          <GithubLink url={repository.url} />
+        </View>
+      )}
+    </Pressable>
   );
 };
 
