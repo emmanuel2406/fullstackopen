@@ -31,14 +31,18 @@ export const GET_REPOSITORIES = gql`
 `;
 
 export const GET_REPOSITORY = gql`
-  query GetRepository($id: ID!) {
+  query GetRepository($id: ID!, $first: Int, $after: String) {
     repository(id: $id) {
       ...RepositoryDetails
-      reviews {
+      reviews(first: $first, after: $after) {
         edges {
           node {
             ...ReviewDetails
           }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }

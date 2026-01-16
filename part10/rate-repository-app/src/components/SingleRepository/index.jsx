@@ -15,12 +15,18 @@ const styles = StyleSheet.create({
 
 const SingleRepository = () => {
   const { id } = useParams();
-  const { repository, loading } = useRepository(id);
-  if (loading) {
+  const { repository, loading, fetchMore } = useRepository(id, 5);
+  if (loading || !repository) {
     return <ActivityIndicator size="large" />;
   }
 
-  const reviews = repository.reviews.edges.map((edge) => edge.node);
+  const onEndReach = () => {
+    fetchMore();
+  };
+
+  const reviews = repository
+    ? repository.reviews.edges.map((edge) => edge.node)
+    : [];
 
   return (
     <FlatList
@@ -33,6 +39,8 @@ const SingleRepository = () => {
           <RepositoryItem repository={repository} privateView={true} />
         </View>
       )}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
     />
   );
 };
