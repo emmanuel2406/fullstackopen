@@ -8,18 +8,36 @@ const ORDER_MAPPING = {
   lowest: { orderBy: "RATING_AVERAGE", orderDirection: "ASC" },
 };
 
-const useRepositories = ({ order, searchKeyword }) => {
+const useRepositories = ({ order, searchKeyword, first }) => {
   const { orderBy, orderDirection } = ORDER_MAPPING[order];
-  const { data, loading, error, refetch } = useQuery(GET_REPOSITORIES, {
+  const variables = { orderBy, orderDirection, searchKeyword, first };
+
+  const { data, loading, fetchMore, ...result } = useQuery(GET_REPOSITORIES, {
     fetchPolicy: "cache-and-network",
-    variables: { orderBy, orderDirection, searchKeyword },
+    variables,
   });
+
+  // fetchMore wrapper
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        ...variables,
+      },
+    });
+  };
 
   return {
     repositories: data?.repositories,
     loading,
-    error,
-    refetch,
+    fetchMore: handleFetchMore,
+    ...result,
   };
 };
 

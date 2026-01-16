@@ -42,7 +42,7 @@ export class RepositoryListContainer extends React.Component {
   };
 
   render() {
-    const { repositories } = this.props;
+    const { repositories, onEndReach } = this.props;
     const repositoryNodes = repositories
       ? repositories.edges.map((edge) => edge.node)
       : [];
@@ -54,6 +54,8 @@ export class RepositoryListContainer extends React.Component {
           <RepositoryItem repository={item} privateView={false} />
         )}
         ListHeaderComponent={this.renderHeader}
+        onEndReached={onEndReach}
+        onEndReachedThreshold={0.5}
       />
     );
   }
@@ -64,10 +66,15 @@ const RepositoryList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { repositories, loading } = useRepositories({
+  const { repositories, fetchMore } = useRepositories({
     order,
     searchKeyword: debouncedSearchQuery,
+    first: 5,
   });
+
+  const onEndReach = () => {
+    fetchMore();
+  };
 
   return (
     <RepositoryListContainer
@@ -76,6 +83,7 @@ const RepositoryList = () => {
       setSearchQuery={setSearchQuery}
       order={order}
       setOrder={setOrder}
+      onEndReach={onEndReach}
     />
   );
 };

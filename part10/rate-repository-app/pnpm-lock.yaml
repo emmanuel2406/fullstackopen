@@ -71,6 +71,9 @@ importers:
       use-debounce:
         specifier: ^10.1.0
         version: 10.1.0(react@18.2.0)
+      utilities:
+        specifier: link:@apollo/client/utilities
+        version: link:@apollo/client/utilities
       yup:
         specifier: ^1.7.1
         version: 1.7.1

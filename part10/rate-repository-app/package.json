@@ -45,6 +45,7 @@
     "react-native-web": "~0.19.13",
     "react-router-native": "^6.30.0",
     "use-debounce": "^10.1.0",
+    "utilities": "link:@apollo/client/utilities",
     "yup": "^1.7.1"
   },
   "devDependencies": {
